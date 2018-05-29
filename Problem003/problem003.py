@@ -1,3 +1,5 @@
+import math
+
 def is_prime_number(n):
     if n < 2:
         return False
@@ -10,14 +12,32 @@ def is_prime_number(n):
                 return False
     return True
 
-prob_num = 600851475143
-nums = range(2,prob_num)
-max_prime_num = 2
-prime_nums = []
-for num in nums:
-    if is_prime_number(num):
-        max_prime_num = num
-        prime_nums.append(num)
+# エラトステネスの篩
+# step1:探索リストに2からnまでの整数を昇順で入れる。
+# step2:探索リストの先頭の数を素数リストに移動し、その倍数を探索リストから篩い落とす。
+# step3:上記の篩い落とし操作を探索リストの先頭値がxの平方根に達するまで行う。
+# step4:探索リストに残った数を素数リストに移動して処理終了。
+def sieve_of_eratosthenes(n):
+    prime_num_list = []
+    search_list = range(2,n)
 
-print(prime_nums)
-print(max_prime_num)
+    goal_num = math.sqrt(n)
+    while search_list[0] < goal_num:
+        move_num = search_list.pop(0)
+        prime_num_list.append(move_num)
+
+        try:
+            while True:
+                move_num *= 2
+                i = search_list.index(move_num)
+                prime_num_list.append(search_list[i])
+        except ValueError:
+            continue
+
+    return prime_num_list
+
+
+prob_num = 600851475143
+prime_num_list = sieve_of_eratosthenes(prob_num)
+print(prime_num_list)
+print(prime_num_list[len(prime_num_list)])
